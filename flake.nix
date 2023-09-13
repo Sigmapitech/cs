@@ -2,11 +2,14 @@
   description = "Print EPITECH's coding style compliance report";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    ruleset.url = "git+ssh://git@github.com/Epitech/banana-coding-style-checker.git";
-    ruleset.flake = false;
+    ruleset = {
+      url = "git+ssh://git@github.com/Epitech/banana-coding-style-checker.git?ref=main&rev=23bd1c7a7a4c271e52a3062b5ce6c99e4e4291fe";
+      flake = false;
+    };
     flake-utils.url = "github:numtide/flake-utils";
   };
-  outputs = { self, nixpkgs, ruleset, flake-utils, ... }@inputs:
+
+  outputs = { nixpkgs, ruleset, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem
       (system:
         let pkgs = nixpkgs.legacyPackages.${system}; in
