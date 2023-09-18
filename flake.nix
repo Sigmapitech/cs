@@ -1,5 +1,6 @@
 {
   description = "Print EPITECH's coding style compliance report";
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     ruleset = {
@@ -17,115 +18,27 @@
           "x86_64-darwin"
           "aarch64-darwin"
         ]
-          (system: function {
-            inherit system;
-            pkgs = nixpkgs.legacyPackages.${system};
-          });
-
-      all-libclangpy = arch: p:
-        with arch;
-        let
-          distrib = {
-            "x86_64-linux" = {
-              platform = "manylinux2010_x86_64";
-              hash = "sha256-nc3HMJOXiLi2n/1tXXX+U2bj7gB/Hjapl5nsCwwAFJI=";
-            };
-
-            "x86_64-darwin" = {
-              platform = "macosx_10_9_x86_64";
-              hash = "sha256-2p5H68PwptkPsWnvJfn7zSm0pO+XqLDj46F4AK8UI/Q=";
-            };
-
-            "aarch64-darwin" = {
-              platform = "macosx_11_0_arm64";
-              hash = "sha256-4aWtHoleVEPiBVaMhcBLRgjk6XPa5C9N/Zy0bIHRSGs=";
-            };
-
-            "aarch64-linux" = {
-              platform = "manylinux2014_aarch64";
-              hash = "sha256-gTBIISBQBHagJxcfjzyN/CU2tZFxbupx/F2iLK4TExs=";
-            };
-          }.${system};
-        in
-        p.buildPythonPackage rec {
-          pname = "libclang";
-          version = "16.0.6";
-          format = "wheel";
-
-          src = pkgs.python310Packages.fetchPypi {
-            inherit pname version format;
-            platform = distrib.platform;
-            hash = distrib.hash;
-          };
-        };
-
-      all-banana-vera = arch:
-        with arch;
-        let
-          libclangpy = all-libclangpy arch;
-          pyenv = pkgs.python310.withPackages (p: [ (libclangpy p) ]);
-        in
-        pkgs.banana-vera.overrideAttrs (prev: {
-          nativeBuildInputs = prev.nativeBuildInputs ++ [ pkgs.makeWrapper ];
-          postFixup = ''
-            wrapProgram $out/bin/vera++ \
-              --set PYTHONPATH "${pyenv}/${pyenv.sitePackages}"
-          '';
-        });
-
-      all-report-script = arch:
-        let
-          banana-vera = all-banana-vera arch;
-        in
-        with arch.pkgs; (writeShellScriptBin "cs" ''
-          start_time=$(date +%s)
-
-          if [ -z "$1" ]; then
-              project_dir=$(pwd)
-          else
-              project_dir="$1"
-          fi
-
-          echo "Running norm in $project_dir"
-          count=$(find "$project_dir"     \
-            -type f                       \
-            -not -path "*/.git/*"         \
-            -not -path "*/.idea/*"        \
-            -not -path "*/.vscode/*"      \
-            -not -path "bonus/*"          \
-            -not -path "tests/*"          \
-            -not -path "/*build/*"        \
-            | ${banana-vera}/bin/vera++   \
-            --profile epitech             \
-            --root ${ruleset}/vera        \
-            --error                       \
-            2>&1                          \
-            | sed "s|$project_dir/||"     \
-            | tee /dev/stderr | wc -l
-          )
-
-          echo "Found $count issues"
-          end_time=$(date +%s)
-          echo "Ran in $((end_time - start_time))s"
-          if [ $count -gt 0 ]; then
-              exit 1
-          fi
-          exit 0
-        '');
-
+          (system:
+            let
+              pkgs = nixpkgs.legacyPackages.${system};
+            in
+            function { inherit system pkgs; });
     in
     rec {
+      formatter = forAllSystems ({ pkgs, ... }: pkgs.nixpkgs-fmt);
+
       packages = forAllSystems (arch: rec {
-        report = all-report-script arch;
+        report = import ./report.nix ruleset arch;
         default = report;
       });
 
       apps = forAllSystems ({ system, ... }: rec {
-        report.type = "app";
-        report.program = "${packages.${system}.report}/bin/cs";
+        report = {
+          type = "app";
+          program = "${packages.${system}.report}/bin/cs";
+        };
+
         default = report;
       });
-
-      formatter = forAllSystems ({ pkgs, ... }: pkgs.nixpkgs-fmt);
     };
 }
