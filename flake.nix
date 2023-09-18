@@ -23,6 +23,7 @@
           });
 
       libclangpy = arch: p:
+        with arch;
         let
           distrib = {
             "x86_64-linux" = {
@@ -44,42 +45,38 @@
               platform = "manylinux2014_aarch64";
               hash = "sha256-gTBIISBQBHagJxcfjzyN/CU2tZFxbupx/F2iLK4TExs=";
             };
-          };
+          }.${system};
         in
-        with arch; p.buildPythonPackage rec {
+        p.buildPythonPackage rec {
           pname = "libclang";
           version = "16.0.6";
           format = "wheel";
 
           src = pkgs.python310Packages.fetchPypi {
             inherit pname version format;
-            platform = distrib.${system}.platform;
-            hash = distrib.${system}.hash;
+            platform = distrib.platform;
+            hash = distrib.hash;
           };
         };
 
-      banana-vera = arch:
+      all-banana-vera = arch:
         let
-          pyenv = arch.pkgs.python310.withPackages (p: [ libclangpy p arch ]);
+          pyenv = arch.pkgs.python310.withPackages (p: [ (libclangpy arch p) ]);
         in
-        with arch;
-        pkgs.stdenv.mkDerivation rec {
+        with arch.pkgs;
+        stdenv.mkDerivation rec {
           pname = "banana-vera";
           version = "1.3.0-fedora38";
 
-          src = pkgs.fetchFromGitHub {
+          src = fetchFromGitHub {
             owner = "Epitech";
             repo = "banana-vera";
             rev = "refs/tags/v${version}";
             sha256 = "sha256-sSN3trSySJe3KVyrb/hc5HUGRS4M3c4UX9SLlzBM43c";
           };
 
-          nativeBuildInputs = [ pkgs.cmake pkgs.makeWrapper ];
-          buildInputs = with pkgs; [
-            python310
-            python310.pkgs.boost
-            tcl
-          ];
+          nativeBuildInputs = [ cmake makeWrapper ];
+          buildInputs = [ python310 python310.pkgs.boost tcl ];
 
           postFixup = ''
             wrapProgram $out/bin/vera++ \
@@ -93,8 +90,11 @@
           ];
         };
 
-      report-script = arch:
-        (arch.pkgs.writeShellScriptBin "cs" ''
+      all-report-script = arch:
+        let
+          banana-vera = all-banana-vera arch;
+        in
+        with arch.pkgs; (writeShellScriptBin "cs" ''
           start_time=$(date +%s)
 
           if [ -z "$1" ]; then
@@ -112,7 +112,7 @@
             -not -path "bonus/*"          \
             -not -path "tests/*"          \
             -not -path "/*build/*"        \
-            | ${banana-vera arch}/bin/vera++   \
+            | ${banana-vera}/bin/vera++   \
             --profile epitech             \
             --root ${ruleset}/vera        \
             --error                       \
@@ -133,7 +133,7 @@
     in
     rec {
       packages = forAllSystems (arch: rec {
-        report = report-script arch;
+        report = all-report-script arch;
         default = report;
       });
 
