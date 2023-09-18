@@ -22,7 +22,7 @@
             pkgs = nixpkgs.legacyPackages.${system};
           });
 
-      libclangpy = arch: p:
+      all-libclangpy = arch: p:
         with arch;
         let
           distrib = {
@@ -60,35 +60,18 @@
         };
 
       all-banana-vera = arch:
+        with arch;
         let
-          pyenv = arch.pkgs.python310.withPackages (p: [ (libclangpy arch p) ]);
+          libclangpy = all-libclangpy arch;
+          pyenv = pkgs.python310.withPackages (p: [ (libclangpy p) ]);
         in
-        with arch.pkgs;
-        stdenv.mkDerivation rec {
-          pname = "banana-vera";
-          version = "1.3.0-fedora38";
-
-          src = fetchFromGitHub {
-            owner = "Epitech";
-            repo = "banana-vera";
-            rev = "refs/tags/v${version}";
-            sha256 = "sha256-sSN3trSySJe3KVyrb/hc5HUGRS4M3c4UX9SLlzBM43c";
-          };
-
-          nativeBuildInputs = [ cmake makeWrapper ];
-          buildInputs = [ python310 python310.pkgs.boost tcl ];
-
+        pkgs.banana-vera.overrideAttrs (prev: {
+          nativeBuildInputs = prev.nativeBuildInputs ++ [ pkgs.makeWrapper ];
           postFixup = ''
             wrapProgram $out/bin/vera++ \
               --set PYTHONPATH "${pyenv}/${pyenv.sitePackages}"
           '';
-
-          cmakeFlags = [
-            "-DVERA_LUA=OFF"
-            "-DVERA_USE_SYSTEM_BOOST=ON"
-            "-DPANDOC=OFF"
-          ];
-        };
+        });
 
       all-report-script = arch:
         let
