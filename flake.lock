@@ -2,11 +2,11 @@
   "nodes": {
     "nixpkgs": {
       "locked": {
-        "lastModified": 1694767346,
-        "narHash": "sha256-5uH27SiVFUwsTsqC5rs3kS7pBoNhtoy9QfTP9BmknGk=",
+        "lastModified": 1696879762,
+        "narHash": "sha256-Ud6bH4DMcYHUDKavNMxAhcIpDGgHMyL/yaDEAVSImQY=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "ace5093e36ab1e95cb9463863491bee90d5a4183",
+        "rev": "f99e5f03cc0aa231ab5950a15ed02afec45ed51a",
         "type": "github"
       },
       "original": {
@@ -25,11 +25,11 @@
     "ruleset": {
       "flake": false,
       "locked": {
-        "lastModified": 1695026567,
-        "narHash": "sha256-2PvqpW+Ih8u6bhSCPbXzzhEZwiuoPbzpA5HBtZyMB6Y=",
+        "lastModified": 1697105679,
+        "narHash": "sha256-aGsBfid0BJ10x/C0sdjoVEtg8jNZoFqAe8CUoYA4OG4=",
         "ref": "refs/heads/main",
-        "rev": "742017894fdd365f322d9d9ec17a4279743c43cd",
-        "revCount": 103,
+        "rev": "15b206efa52b66218fc4f0205d3a2914651ee0ac",
+        "revCount": 119,
         "type": "git",
         "url": "ssh://git@github.com/Epitech/banana-coding-style-checker.git"
       },
