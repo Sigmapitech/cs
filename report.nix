@@ -18,9 +18,9 @@ in
     -not -path "*/.git/*"         \
     -not -path "*/.idea/*"        \
     -not -path "*/.vscode/*"      \
-    -not -path "bonus/*"          \
-    -not -path "tests/*"          \
-    -not -path "/*build/*"        \
+    -not -path "*/bonus/*"        \
+    -not -path "*/tests/*"        \
+    -not -path "*/*build/*"       \
   | ${banana-vera}/bin/vera++     \
     --profile epitech             \
     --root ${ruleset}/vera        \
