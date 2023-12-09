@@ -1,8 +1,5 @@
-ruleset: arch:
-let
-  banana-vera = import ./wrap-vera.nix arch;
-in
-(arch.pkgs.writeShellScriptBin "cs" ''
+pkgs: ruleset: banana-vera:
+(pkgs.writeShellScriptBin "cs" ''
   start_time=$(date +%s)
 
   if [ -z "$1" ]; then

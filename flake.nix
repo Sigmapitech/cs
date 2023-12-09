@@ -14,12 +14,18 @@
   outputs = { nixpkgs, ruleset, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages.${system};
+
+      vera = (import ./wrap-vera.nix { inherit system pkgs; });
     in
     rec {
+      devShell = pkgs.mkShell {
+        buildInputs = [ vera ];
+      };
+
       formatter = pkgs.nixpkgs-fmt;
 
       packages = rec {
-        report = import ./report.nix ruleset { inherit system pkgs; };
+        report = (import ./report.nix pkgs ruleset vera);
         default = report;
       };
 
