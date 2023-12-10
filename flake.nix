@@ -27,6 +27,7 @@
       packages = rec {
         report = (import ./report.nix pkgs ruleset vera);
         default = report;
+        inherit vera;
       };
 
       apps = rec {
