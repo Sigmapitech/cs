@@ -5,17 +5,18 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
 
+    vera-clang.url = "github:Sigmapitech/vera-clang";
     ruleset = {
       url = "git+ssh://git@github.com/Epitech/banana-coding-style-checker.git";
       flake = false;
     };
   };
 
-  outputs = { nixpkgs, ruleset, flake-utils, ... }:
+  outputs = { nixpkgs, ruleset, flake-utils, vera-clang, ... }:
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages.${system};
 
-      vera = (import ./wrap-vera.nix { inherit system pkgs; });
+      vera = vera-clang.packages.${system}.vera;
     in
     rec {
       devShell = pkgs.mkShell {
