@@ -46,6 +46,8 @@ def run_vera(
     vera_bin: str, ruleset: str, basepath: str,
     ignore_tests: bool = False, ignored_rules: Optional[List[str]] = None
 ) -> int:
+    print("Running norm in", basepath)
+
     files = find_files(basepath, ignore_tests=ignore_tests)
     vera_proc = subprocess.Popen(
         shlex.split(f"{vera_bin} --profile epitech --root {ruleset}"),
