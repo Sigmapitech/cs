@@ -21,6 +21,7 @@ IGNORE_PATTERNS: List[str] = [
     r".*/[.]idea/.*",
     r".*/[.]vscode/.*",
     r".*/bonus/.*",
+    r".*/result/.*",
 ]
 
 
