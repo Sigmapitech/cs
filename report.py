@@ -98,7 +98,7 @@ def main() -> int:
     marker = time.perf_counter()
     count = run_vera(
         vera, ruleset, project_dir,
-        ignore_tests="--ignore-tests" in args,
+        ignore_tests="--include-tests" not in args,
         ignored_rules=ignored_rules
     )
 
