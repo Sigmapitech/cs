@@ -1,6 +1,18 @@
 """
-usage: report.py [banana-vera-bin] [ruleset] [path] [...]
+Usage:
+    nix run github:Sigmapitech/cs
+    nix run github:Sigmapitech/cs -- [options]
 
+Options:
+    path                Specifies the path to the project to be checked,
+                        defaults to the current directory
+    --ignore-rules      Specifies a list of rules to be ignored,
+                        separated by commas
+    --ignore-folders    Specifies a list of folders to be ignored
+                        within the search path, separated by commas
+    --include-tests     Specifies whether to include the test folder
+                        for checking, disabled by default
+    -h, --help          Displays this help message
 """
 
 from typing import List
@@ -88,6 +100,10 @@ def run_vera(
 def main() -> int:
     if len(sys.argv) < 3:
         return 1
+
+    if "-h" in sys.argv or "--help" in sys.argv:
+        print(__doc__[1:-1])
+        return 0
 
     vera, ruleset, *args = sys.argv[1::]
     project_dir = os.path.expanduser(
