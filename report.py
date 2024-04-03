@@ -59,8 +59,8 @@ def run_vera(
     vera_bin: str,
     ruleset: str,
     basepath: str,
-    ignored_folders: List[str] = None,
-    ignored_rules: List[str] = None,
+    ignored_folders: List[str],
+    ignored_rules: List[str],
 ) -> int:
     print("Running norm in", basepath)
 
