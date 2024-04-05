@@ -34,6 +34,7 @@ IGNORE_PATTERNS: List[str] = [
     r".*/[.]vscode/.*",
     r".*/bonus/.*",
     r".*/result/.*",
+    r".*/Doxyfile"
 ]
 
 
