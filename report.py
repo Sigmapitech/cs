@@ -12,6 +12,7 @@ Options:
                         within the search path, separated by commas
     --include-tests     Specifies whether to include the test folder
                         for checking, disabled by default
+    --use-gitignore     Exclude all file / folder in gitignore
     -h, --help          Displays this help message
 """
 
@@ -23,7 +24,7 @@ import subprocess
 import shlex
 import sys
 import time
-
+import pathlib
 
 IGNORE_PATTERNS: List[str] = [
     r".*/[.]build/.*",
@@ -123,6 +124,19 @@ def main() -> int:
         for folder in arg[17:].split(",")
         if arg.startswith("--ignore-folders=")
     ]
+
+    if "--use-gitignore" in args and os.path.isfile(".gitignore"):
+        content = [
+            line
+            for line in pathlib.Path(".gitignore").read_text().splitlines()
+            if line and not line.startswith('#')
+        ]
+        for (pattern, repl) in (
+            (r"(?=[^.]|^)([*])", ".*"),
+            (r"(?=^\[)?([.])(?=[^*])?(?!\])", "[.]")
+        ):
+            content = [re.sub(pattern, repl, line) for line in content]
+        IGNORE_PATTERNS.extend(f".*/{line}" for line in content)
 
     if "--include-tests" not in args:
         ignored_folders.append("tests")
