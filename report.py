@@ -139,7 +139,7 @@ def main() -> int:
                 f".*/{line}" for line in content
                 if line and not line.startswith('#')
             )
-    print(IGNORE_PATTERNS)
+
     if "--include-tests" not in args:
         ignored_folders.append("tests")
 
