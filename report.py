@@ -24,7 +24,7 @@ import subprocess
 import shlex
 import sys
 import time
-
+import pathlib
 
 IGNORE_PATTERNS: List[str] = [
     r".*/[.]build/.*",
@@ -125,20 +125,18 @@ def main() -> int:
         if arg.startswith("--ignore-folders=")
     ]
 
-    if "--use-gitignore" in args:
-        with open(".gitignore") as f:
-            content = f.read().splitlines()
-            content = [
-                re.sub(r"(?=[^.]|^)([*])", ".*", line) for line in content
-            ]
-            content = [
-                re.sub(r"(?=^\[)?([.])(?=[^*])?(?!\])", "[.]", line)
-                for line in content
-            ]
-            IGNORE_PATTERNS.extend(
-                f".*/{line}" for line in content
-                if line and not line.startswith('#')
-            )
+    if "--use-gitignore" in args and os.path.isfile(".gitignore"):
+        content = [
+            line
+            for line in pathlib.Path(".gitignore").read_text().splitlines()
+            if line and not line.startswith('#')
+        ]
+        for (pattern, repl) in (
+            (r"(?=[^.]|^)([*])", ".*"),
+            (r"(?=^\[)?([.])(?=[^*])?(?!\])", "[.]")
+        ):
+            content = [re.sub(pattern, repl, line) for line in content]
+        IGNORE_PATTERNS.extend(f".*/{line}" for line in content)
 
     if "--include-tests" not in args:
         ignored_folders.append("tests")
