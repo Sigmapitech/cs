@@ -5,11 +5,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1710146030,
-        "narHash": "sha256-SZ5L6eA7HJ/nmkzGG7/ISclqe6oZdOZTNoesiInkXPQ=",
+        "lastModified": 1726560853,
+        "narHash": "sha256-X6rJYSESBVr3hBoH0WbKE5KvhPU5bloyZ2L4K60/fPQ=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "b1d9ab70662946ef0850d488da1c9019f3a9752a",
+        "rev": "c1dfcf08411b08f6b8615f7d8971a2bfa81d5e8a",
         "type": "github"
       },
       "original": {
@@ -38,11 +38,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1712791164,
-        "narHash": "sha256-3sbWO1mbpWsLepZGbWaMovSO7ndZeFqDSdX0hZ9nVyw=",
+        "lastModified": 1728241625,
+        "narHash": "sha256-yumd4fBc/hi8a9QgA9IT8vlQuLZ2oqhkJXHPKxH/tRw=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "1042fd8b148a9105f3c0aca3a6177fd1d9360ba5",
+        "rev": "c31898adf5a8ed202ce5bea9f347b1c6871f32d1",
         "type": "github"
       },
       "original": {
@@ -79,11 +79,11 @@
     "ruleset": {
       "flake": false,
       "locked": {
-        "lastModified": 1712846006,
-        "narHash": "sha256-JecscGk+xa/i3xLUWvqOJUaau8apRJyfF9mimXyPa1I=",
+        "lastModified": 1727874078,
+        "narHash": "sha256-RvE1U0OCtU9UA70eEsTixmpabxaU5cFV1sKuX1WaVO8=",
         "ref": "refs/heads/main",
-        "rev": "9a005159de4f296a5bf560f5e97ac17c9905f6cb",
-        "revCount": 170,
+        "rev": "148b7b99c4afeea83209e54aec8d43b7dd6ba04f",
+        "revCount": 202,
         "type": "git",
         "url": "ssh://git@github.com/Epitech/banana-coding-style-checker.git"
       },
