@@ -1,0 +1,15 @@
+--- a/vera/rules/utils/functions/__init__.py
++++ b/vera/rules/utils/functions/__init__.py
+@@ -177,7 +177,11 @@ def _get_function_from_clang_cursor(cursor: clang.cindex.Cursor, file_contents:
+ def get_functions(file: str) -> list[Function]:
+     file_contents = '\n'.join(get_lines(file))
+
+-    parsed = clang.cindex.Index.create().parse(file).cursor
++    parsed = clang.cindex.Index.create().parse(
++        file,
++        args=['-DCS_TRANSCIENT=1'],
++    ).cursor
++
+     new_functions = []
+
+     if parsed.kind.name == 'TRANSLATION_UNIT':
