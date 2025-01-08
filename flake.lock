@@ -128,15 +128,16 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1728590431,
-        "narHash": "sha256-nXVlXhc3nA1SMf6GXJu8dN15EFaPVUA0GamDN/3kK9E=",
+        "lastModified": 1736340474,
+        "narHash": "sha256-7ELueG54iG59DYO18RH81SxT92giPM6iT7oXWNSu0co=",
         "owner": "Sigmapitech",
         "repo": "vera-clang",
-        "rev": "10d3bcc8c14204bfeeae4bd3bbe4f2d6845a21cf",
+        "rev": "b43b2d95274248d58f54962db8168a5cacb175f5",
         "type": "github"
       },
       "original": {
         "owner": "Sigmapitech",
+        "ref": "test",
         "repo": "vera-clang",
         "type": "github"
       }

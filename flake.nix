@@ -5,7 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
 
-    vera-clang.url = "github:Sigmapitech/vera-clang";
+    vera-clang.url = "github:Sigmapitech/vera-clang/test";
     ruleset = {
       url = "git+ssh://git@github.com/Epitech/banana-coding-style-checker.git";
       flake = false;
