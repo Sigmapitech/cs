@@ -6,6 +6,7 @@ Usage:
 Options:
     path                Specifies the path to the project to be checked,
                         defaults to the current directory
+    --ecsls             Use the ignore list from the nearest ecsls.toml
     --ignore-rules      Specifies a list of rules to be ignored,
                         separated by commas
     --ignore-folders    Specifies a list of folders to be ignored
@@ -25,6 +26,7 @@ import shlex
 import sys
 import time
 import pathlib
+import tomli
 
 IGNORE_PATTERNS: List[str] = [
     r".*/[.]build/.*",
@@ -55,6 +57,24 @@ def find_files(search_dir: str, ignored_folders: List[str]) -> List[str]:
             re.match(pattern, filename) is None for pattern in IGNORE_PATTERNS
         )
     ]
+
+
+def read_ecsls_ignore_list(path: pathlib.Path) -> list[str]:
+    count_slash = str(path.absolute()).count('/')
+
+    print("/", count_slash)
+    for _ in range(count_slash + 1):
+        abs_path = (path / 'ecsls.toml').absolute()
+        print("-?>", abs_path)
+
+        if abs_path.exists():
+            with open(abs_path, "rb") as f:
+                conf = tomli.load(f).get("reports", {})
+                print("->", conf)
+                return conf.get("ignore", [])
+
+        path = path.parent
+    return []
 
 
 def run_vera(
@@ -140,6 +160,9 @@ def main() -> int:
 
     if "--include-tests" not in args:
         ignored_folders.append("tests")
+
+    if "--ecsls" in args:
+        ignored_rules.extend(read_ecsls_ignore_list(pathlib.Path(project_dir)))
 
     marker = time.perf_counter()
     count = run_vera(
