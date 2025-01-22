@@ -62,15 +62,12 @@ def find_files(search_dir: str, ignored_folders: List[str]) -> List[str]:
 def read_ecsls_ignore_list(path: pathlib.Path) -> list[str]:
     count_slash = str(path.absolute()).count('/')
 
-    print("/", count_slash)
     for _ in range(count_slash + 1):
         abs_path = (path / 'ecsls.toml').absolute()
-        print("-?>", abs_path)
 
         if abs_path.exists():
             with open(abs_path, "rb") as f:
                 conf = tomli.load(f).get("reports", {})
-                print("->", conf)
                 return conf.get("ignore", [])
 
         path = path.parent
