@@ -33,7 +33,7 @@ IGNORE_PATTERNS: List[str] = [
     r".*/[.]git/.*",
     r".*/[.]idea/.*",
     r".*/[.]vscode/.*",
-    r".*/bonus/.*",
+    r"./bonus/.*",
     r".*/result/.*",
     r".*/Doxyfile"
 ]
@@ -47,7 +47,7 @@ def find_files(search_dir: str, ignored_folders: List[str]) -> List[str]:
     )
 
     for folder in ignored_folders or []:
-        IGNORE_PATTERNS.append(rf".*/{folder}/.*")
+        IGNORE_PATTERNS.append(rf"{search_dir}/{folder}/.*")
     return [
         filename
         for filename in find_proc.stdout.splitlines()
