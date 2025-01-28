@@ -14,6 +14,7 @@ Options:
     --include-tests     Specifies whether to include the test folder
                         for checking, disabled by default
     --use-gitignore     Exclude all file / folder in gitignore
+    --emit-report       Output to a coding-style-reports.log file
     -h, --help          Displays this help message
 """
 
@@ -80,6 +81,7 @@ def run_vera(
     basepath: str,
     ignored_folders: List[str],
     ignored_rules: List[str],
+    to_file: bool = True
 ) -> int:
     print("Running norm in", basepath)
 
@@ -108,6 +110,10 @@ def run_vera(
             )
         )
     )
+
+    if to_file:
+        with open("coding-style-reports.log", "w+") as f:
+            f.write(reports + "\n")
 
     print(reports.replace(basepath.removesuffix("/"), "."))
     return sum(
@@ -168,6 +174,7 @@ def main() -> int:
         project_dir,
         ignored_folders,
         ignored_rules,
+        to_file="--emit-report" in args
     )
 
     if count != -1:
