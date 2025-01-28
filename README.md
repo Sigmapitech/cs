@@ -3,7 +3,7 @@
 ## Example usage
 
 ```sh
-nix run github:Sigmapitech/cs . --include-tests --ignore-rules=C-G1,C-O3
+nix run github:Sigmapitech/cs -- . --include-tests --ignore-rules=C-G1,C-O3
 ```
 
 ## Options
