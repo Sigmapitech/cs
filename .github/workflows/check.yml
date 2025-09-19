@@ -29,3 +29,13 @@ jobs:
 
       - name: Build cs
         run: nix build . --print-build-logs
+
+      - name: Smoke tests
+        run: |
+          ./result/bin/cs smoke/good.c
+
+          # bad.c should fail
+          if ./result/bin/cs smoke/bad.c; then
+            echo "bad.c unexpectedly passed"
+            exit 1
+          fi
