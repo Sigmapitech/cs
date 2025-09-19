@@ -23,12 +23,10 @@
       supportedSystems (system: f nixpkgs.legacyPackages.${system});
   in {
     packages = forAllSystems (pkgs: {
-      inherit (vera-clang.packages.${pkgs.system}) vera;
-
       default = self.packages.${pkgs.system}.report;
     
       report = pkgs.callPackage ./report.nix {
-        banana-vera = self.packages.${pkgs.system}.vera;
+        banana-vera = vera-clang.packages.${pkgs.system}.banana-vera;
 
         inherit ruleset;
       };
