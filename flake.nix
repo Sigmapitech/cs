@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
 
     vera-clang.url = "github:Sigmapitech/vera-clang";
     ruleset = {
@@ -12,32 +11,27 @@
     };
   };
 
-  outputs = { nixpkgs, ruleset, flake-utils, vera-clang, ... }:
-    flake-utils.lib.eachDefaultSystem (system: let
-      pkgs = nixpkgs.legacyPackages.${system};
+  outputs = { self, nixpkgs, ruleset, vera-clang }: let
+    supportedSystems = [
+      "aarch64-linux"
+      "aarch64-darwin"
+      "x86_64-linux"
+      "x86_64-darwin"
+    ];
 
-      vera = vera-clang.packages.${system}.vera;
-    in
-    rec {
-      devShell = pkgs.mkShell {
-        buildInputs = [ vera ];
-      };
+    forAllSystems = f: nixpkgs.lib.genAttrs
+      supportedSystems (system: f nixpkgs.legacyPackages.${system});
+  in {
+    packages = forAllSystems (pkgs: {
+      inherit (vera-clang.packages.${pkgs.system}) vera;
 
-      formatter = pkgs.nixpkgs-fmt;
+      default = self.packages.${pkgs.system}.report;
+    
+      report = pkgs.callPackage ./report.nix {
+        banana-vera = self.packages.${pkgs.system}.vera;
 
-      packages = rec {
-        report = (import ./report.nix pkgs ruleset vera);
-        default = report;
-        inherit vera;
-      };
-
-      apps = rec {
-        report = {
-          type = "app";
-          program = "${packages.report}/bin/cs";
-        };
-
-        default = report;
+        inherit ruleset;
       };
     });
+  };
 }
